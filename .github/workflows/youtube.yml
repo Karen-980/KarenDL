@@ -14,3 +14,7 @@ on:
         description: "Optional password (leave empty if not needed)"
         required: false
         
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    
