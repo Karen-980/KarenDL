@@ -1,42 +1,58 @@
-name: Karen YouTube
-
+name: Karen YouTube Pro
 on:
   workflow_dispatch:
     inputs:
       url:
         description: 'YouTube Video URL'
         required: true
+      resolution:
+        description: 'Select Resolution'
+        required: true
+        default: 'best'
+        type: choice
+        options:
+          - 'best'
+          - '1080'
+          - '720'
+          - '480'
 
 jobs:
   download:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Tools
         run: |
           python -m pip install --upgrade pip
-          pip install yt-dlp
+          pip install --upgrade yt-dlp
 
-      - name: Create Cookies File
-        env:
-          YT_COOKIE: ${{ secrets.YT_COOKIE }}
-        run: |
-          echo "$YT_COOKIE" > cookies.txt
+      - name: Create Cookie File
+        run: echo "${{ secrets.YT_COOKIE }}" > cookies.txt
 
       - name: Download Video
         run: |
-          yt-dlp --cookies cookies.txt -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" "${{ github.event.inputs.url }}" -o "video.mp4"
+          if [ "${{ github.event.inputs.resolution }}" == "best" ]; then
+            FORMAT="bestvideo+bestaudio/best"
+          else
+            FORMAT="bestvideo[height<=${{ github.event.inputs.resolution }}]+bestaudio/best[height<=${{ github.event.inputs.resolution }}]"
+          fi
+          
+          yt-dlp --cookies cookies.txt \
+                 -f "$FORMAT" \
+                 --merge-output-format mp4 \
+                 "${{ github.event.inputs.url }}" \
+                 -o "video.mp4"
 
-      - name: Upload Video
+      - name: Upload Video Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: youtube-video
+          name: Karen-Downloaded-Video
           path: video.mp4
           retention-days: 1
