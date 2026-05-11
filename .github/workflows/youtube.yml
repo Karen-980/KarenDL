@@ -1,1 +1,9 @@
+name: Karen YouTube
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: "YouTube URL"
+        required: true
 
