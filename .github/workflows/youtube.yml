@@ -6,4 +6,11 @@ on:
       video_url:
         description: "YouTube URL"
         required: true
-
+      quality:
+        description: "Video Quality (e.g. 144, 240, 360, 480)"
+        required: true
+        default: "360"
+      password:
+        description: "Optional password (leave empty if not needed)"
+        required: false
+        
