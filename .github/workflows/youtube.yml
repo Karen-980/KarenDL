@@ -34,3 +34,11 @@ jobs:
           ffmpeg -version
           aria2c -v
           
+      - name: Download video
+        run: |
+          mkdir -p dl/youtube
+
+          yt-dlp \
+            -f "best[height<=${{ github.event.inputs.quality }}]" \
+            -o "dl/youtube/%(title)s.%(ext)s" \
+            "${{ github.event.inputs.video_url }}"
