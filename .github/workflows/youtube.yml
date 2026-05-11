@@ -42,3 +42,9 @@ jobs:
             -f "best[height<=${{ github.event.inputs.quality }}]" \
             -o "dl/youtube/%(title)s.%(ext)s" \
             "${{ github.event.inputs.video_url }}"
+      - name: Upload files
+        uses: actions/upload-artifact@v4
+        with:
+          name: youtube-download
+          path: dl/youtube
+          
