@@ -28,3 +28,9 @@ jobs:
           sudo apt install -y ffmpeg aria2
           python3 -m pip install -U yt-dlp
           
+      - name: Test tools
+        run: |
+          yt-dlp --version
+          ffmpeg -version
+          aria2c -v
+          
